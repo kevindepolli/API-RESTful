@@ -6,4 +6,12 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.13.18"
 
-libraryDependencies += guice
+libraryDependencies ++= Seq(
+  guice,
+  // 1. Permite o Play falar JDBC (SQL) no Java
+  javaJdbc,
+  // 2. Gerencia as migrations
+  evolutions,
+  // 3. O Driver oficial do MySQL para Java 17+
+  "com.mysql" % "mysql-connector-j" % "8.3.0"
+)
