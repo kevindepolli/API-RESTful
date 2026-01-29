@@ -26,12 +26,12 @@ INSERT INTO FORNECEDOR (ID, NOME, CNPJ, ID_ENDERECO, EMAIL, TELEFONE) VALUES
                                                                           (5, 'Moda e Estilo', '77.888.999/0001-30', 5, 'moda@estilo.com', '71 95555-0005');
 
 -- 4. Inserindo USUÁRIOS (Reutilizando endereços para teste)
-INSERT INTO USUARIO (ID, NOME, EMAIL, SENHA, ID_ENDERECO) VALUES
-                                                              (1, 'Admin Sistema', 'admin@email.com', 'senhafrote123', 1),
-                                                              (2, 'João Silva', 'joao@email.com', '123456', 2),
-                                                              (3, 'Maria Oliveira', 'maria@email.com', 'maria123', 3),
-                                                              (4, 'Pedro Santos', 'pedro@email.com', 'pedro@99', 4),
-                                                              (5, 'Ana Souza', 'ana@email.com', 'ana_segura', 5);
+INSERT INTO USUARIO (ID, NOME, EMAIL, SENHA) VALUES
+                                                  (1, 'Admin Sistema', 'admin@email.com', 'senhafrote123'),
+                                                  (2, 'João Silva', 'joao@email.com', '123456'),
+                                                  (3, 'Maria Oliveira', 'maria@email.com', 'maria123'),
+                                                  (4, 'Pedro Santos', 'pedro@email.com', 'pedro@99'),
+                                                  (5, 'Ana Souza', 'ana@email.com', 'ana_segura');
 
 -- 5. Inserindo PRODUTOS (Vinculando a Categorias e Fornecedores)
 INSERT INTO PRODUTO (ID, DESCRICAO, ID_CATEGORIA, VALOR, QUANTIDADE, ID_FORNECEDOR, QUANTIDADE_MINIMA, VLD_ATIVO) VALUES

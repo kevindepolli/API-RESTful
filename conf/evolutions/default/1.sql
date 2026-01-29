@@ -2,51 +2,49 @@
 
 -- 1. Tabela ENDERECO (Não depende de ninguém)
 CREATE TABLE ENDERECO (
-                          ID INT AUTO_INCREMENT PRIMARY KEY,
+                          ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                           RUA VARCHAR(255) NOT NULL,
                           NUMERO VARCHAR(20) NOT NULL,
                           BAIRRO VARCHAR(255) NOT NULL,
                           CIDADE VARCHAR(255) NOT NULL,
-                          ESTADO VARCHAR(2) NOT NULL, -- Sigla do estado
+                          ESTADO VARCHAR(2) NOT NULL,
                           PAIS VARCHAR(100) NOT NULL,
                           CEP VARCHAR(20) NOT NULL
 ) ENGINE=InnoDB;
 
 -- 2. Tabela CATEGORIA (Não depende de ninguém)
 CREATE TABLE CATEGORIA (
-                           ID INT AUTO_INCREMENT PRIMARY KEY,
+                           ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                            DESCRICAO VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
 -- 3. Tabela FORNECEDOR (Depende de ENDERECO)
 CREATE TABLE FORNECEDOR (
-                            ID INT AUTO_INCREMENT PRIMARY KEY,
+                            ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                             NOME VARCHAR(255) NOT NULL,
                             CNPJ VARCHAR(20) NOT NULL,
-                            ID_ENDERECO INT,
+                            ID_ENDERECO BIGINT,
                             EMAIL VARCHAR(255) NOT NULL,
                             TELEFONE VARCHAR(50) NOT NULL,
                             CONSTRAINT fk_fornecedor_endereco FOREIGN KEY (ID_ENDERECO) REFERENCES ENDERECO(ID)
 ) ENGINE=InnoDB;
 
--- 4. Tabela USUARIO (Depende de ENDERECO)
+-- 4. Tabela USUARIO
 CREATE TABLE USUARIO (
-                         ID INT AUTO_INCREMENT PRIMARY KEY,
+                         ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                          NOME VARCHAR(255) NOT NULL,
                          EMAIL VARCHAR(255) NOT NULL,
-                         SENHA VARCHAR(255) NOT NULL,
-                         ID_ENDERECO INT,
-                         CONSTRAINT fk_usuario_endereco FOREIGN KEY (ID_ENDERECO) REFERENCES ENDERECO(ID)
+                         SENHA VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
 -- 5. Tabela PRODUTO (Depende de CATEGORIA e FORNECEDOR)
 CREATE TABLE PRODUTO (
-                         ID INT AUTO_INCREMENT PRIMARY KEY,
+                         ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                          DESCRICAO VARCHAR(255) NOT NULL,
-                         ID_CATEGORIA INT,
-                         VALOR DECIMAL(10,2) NOT NULL, -- Use DECIMAL para dinheiro
+                         ID_CATEGORIA BIGINT,
+                         VALOR DECIMAL(10,2) NOT NULL,
                          QUANTIDADE INT NOT NULL,
-                         ID_FORNECEDOR INT,
+                         ID_FORNECEDOR BIGINT,
                          QUANTIDADE_MINIMA INT,
                          VLD_ATIVO INT NOT NULL DEFAULT 1,
                          CONSTRAINT fk_produto_categoria FOREIGN KEY (ID_CATEGORIA) REFERENCES CATEGORIA(ID),
