@@ -14,3 +14,11 @@ GET     /produtos/:id       controllers.ProdutoController.getById(id: Long)
 POST    /produtos           controllers.ProdutoController.create(request: Request)
 PUT     /produtos/:id       controllers.ProdutoController.update(id: Long, request: Request)
 DELETE  /produtos/:id       controllers.ProdutoController.delete(id: Long)
+
+# Rotas de Categorias API
+
+GET     /categorias              controllers.CategoriaController.listarCategorias
+GET     /categorias/:id          controllers.CategoriaController.buscarCategoria(id)
+POST    /categorias              controllers.CategoriaController.criarCategoria(request)
+PUT     /categorias/:id          controllers.CategoriaController.atualizarCategoria(id, request)
+DELETE  /categorias/:id          controllers.CategoriaController.deletarCategoria(id)
