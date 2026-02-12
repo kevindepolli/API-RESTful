@@ -22,3 +22,13 @@ GET     /categorias/:id          controllers.CategoriaController.buscarCategoria
 POST    /categorias              controllers.CategoriaController.criarCategoria(request: Request)
 PUT     /categorias/:id          controllers.CategoriaController.atualizarCategoria(id: Long, request: Request)
 DELETE  /categorias/:id          controllers.CategoriaController.deletarCategoria(id: Long)
+
+# Rotas de Produtos API
+GET     /usuarios           controllers.UsuarioController.list(request: Request)
+GET     /usuarios/:id       controllers.UsuarioController.getById(id: Long)
+POST    /usuarios           controllers.UsuarioController.create(request: Request)
+PUT     /usuarios/:id       controllers.UsuarioController.update(id: Long, request: Request)
+DELETE  /usuarios/:id       controllers.UsuarioController.delete(id: Long, request: Request)
+
+# Rotas de autenticação
+POST    /login           controllers.AuthController.login(request: Request)
