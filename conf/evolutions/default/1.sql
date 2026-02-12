@@ -1,7 +1,7 @@
 # --- !Ups
 
 -- 1. Tabela ENDERECO (Não depende de ninguém)
-CREATE TABLE ENDERECO (
+CREATE TABLE IF NOT EXISTS ENDERECO (
                           ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                           RUA VARCHAR(255) NOT NULL,
                           NUMERO VARCHAR(20) NOT NULL,
@@ -13,13 +13,13 @@ CREATE TABLE ENDERECO (
 ) ENGINE=InnoDB;
 
 -- 2. Tabela CATEGORIA (Não depende de ninguém)
-CREATE TABLE CATEGORIA (
+CREATE TABLE IF NOT EXISTS CATEGORIA (
                            ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                            DESCRICAO VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
 -- 3. Tabela FORNECEDOR (Depende de ENDERECO)
-CREATE TABLE FORNECEDOR (
+CREATE TABLE IF NOT EXISTS FORNECEDOR (
                             ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                             NOME VARCHAR(255) NOT NULL,
                             CNPJ VARCHAR(20) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE FORNECEDOR (
 ) ENGINE=InnoDB;
 
 -- 4. Tabela USUARIO
-CREATE TABLE USUARIO (
+CREATE TABLE IF NOT EXISTS USUARIO (
                          ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                          NOME VARCHAR(255) NOT NULL,
                          EMAIL VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE USUARIO (
 ) ENGINE=InnoDB;
 
 -- 5. Tabela PRODUTO (Depende de CATEGORIA e FORNECEDOR)
-CREATE TABLE PRODUTO (
+CREATE TABLE IF NOT EXISTS PRODUTO (
                          ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                          DESCRICAO VARCHAR(255) NOT NULL,
                          ID_CATEGORIA BIGINT,

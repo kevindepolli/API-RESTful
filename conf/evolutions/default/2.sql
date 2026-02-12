@@ -27,11 +27,12 @@ INSERT INTO FORNECEDOR (ID, NOME, CNPJ, ID_ENDERECO, EMAIL, TELEFONE) VALUES
 
 -- 4. Inserindo USUÁRIOS (Reutilizando endereços para teste)
 INSERT INTO USUARIO (ID, NOME, EMAIL, SENHA, ROLE) VALUES
-                                                  (1, 'Admin Sistema', 'admin@email.com', 'senhafrote123', 'ADMIN'),
-                                                  (2, 'João Silva', 'joao@email.com', '123456', 'USER'),
-                                                  (3, 'Maria Oliveira', 'maria@email.com', 'maria123', 'USER'),
-                                                  (4, 'Pedro Santos', 'pedro@email.com', 'pedro@99', 'USER'),
-                                                  (5, 'Ana Souza', 'ana@email.com', 'ana_segura', 'USER');
+                                                  (1, 'Admin', 'admin@email.com', '$2a$12$T8Xdqde3hvX/QtZDOjQsE.aVvINDj7n6CaBQcwFSnHwu3u16E7yUG', 'ADMIN'),
+                                                  (2, 'João Silva', 'joao@email.com', '$2a$12$Wgpfl8pXxGG7YP.EDs5ogO1ZLiCvmMHVsDrE3NuhJUJLDF/gnVXfq', 'USER'),
+                                                  (3, 'Maria Oliveira', 'maria@email.com', '$2a$12$2ZQzMR4zA84E82Iov8Yvm.QfP3JYZpZP.I3JsT8pgYJ6BY1azwHS2', 'USER'),
+                                                  (4, 'Pedro Santos', 'pedro@email.com', '$2a$12$FMSzBoDVuRRtL8JyBCVWMOQIvcmc7nLeITxdLIqjk37OnEbhK1DuO', 'USER'),
+                                                  (5, 'Ana Souza', 'ana@email.com', '$2a$12$h.Ah9dmWAy5U6rN2WAQTzu5yHvQzlxIMu23GJeOoHIn1InCcc6BTy', 'USER'),
+                                                  (7, 'Root', 'root@root.com', '$2a$12$nqNYWMchK4ivJM.Fi1CpxOPsSDlzf1lqpRkuBMEYmtWLydqbQlIF6', 'ROOT');
 
 -- 5. Inserindo PRODUTOS (Vinculando a Categorias e Fornecedores)
 INSERT INTO PRODUTO (ID, DESCRICAO, ID_CATEGORIA, VALOR, QUANTIDADE, ID_FORNECEDOR, QUANTIDADE_MINIMA, VLD_ATIVO) VALUES
