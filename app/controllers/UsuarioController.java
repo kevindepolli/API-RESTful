@@ -1,8 +1,11 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.security.Secured;
+import controllers.security.SecuredAction;
 import models.PagedResult;
 import models.Usuario;
+import models.Usuario.Role;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -11,7 +14,7 @@ import repository.UsuarioRepository;
 
 import javax.inject.Inject;
 import java.util.Optional;
-
+@Secured({"ROOT", "ADMIN"})
 public class UsuarioController extends Controller {
 
     private final UsuarioRepository usuarioRepository;
@@ -40,7 +43,9 @@ public class UsuarioController extends Controller {
     public Result getById(Long id) {
         Usuario usuario = usuarioRepository.findById(id);
         if (usuario == null) {
-            return notFound(Json.newObject().put("message", "Usuário não encontrado"));
+            return notFound(Json.newObject()
+                    .put("codigo", "USUARIO_NAO_EXISTE")
+                    .put("message", "Usuário não encontrado"));
         }
         return ok(Json.toJson(usuario));
     }
@@ -50,13 +55,32 @@ public class UsuarioController extends Controller {
         JsonNode json = request.body().asJson();
 
         if (json == null) {
-            return badRequest(Json.newObject().put("message", "JSON inválido"));
+            return badRequest(Json.newObject()
+                    .put("codigo", "JSON_INVALIDO")
+                    .put("message", "JSON inválido"));
         }
 
-        // Converte JSON -> Objeto Java
         Usuario usuario = Json.fromJson(json, Usuario.class);
 
-        // Salva no banco
+        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
+            return status(Http.Status.CONFLICT, Json.newObject() // Retorna 409 Conflict
+                    .put("codigo", "EMAIL_JA_EXISTE")
+                    .put("erro", "O e-mail informado já está cadastrado no sistema."));
+        }
+
+        String roleString = request.attrs().get(SecuredAction.USER_ROLE);
+        Role cargoDoLogado = Role.valueOf(roleString);
+
+
+        if ((usuario.getRole() == Role.ADMIN || usuario.getRole() == Role.ROOT)
+                && cargoDoLogado != Role.ROOT) {
+
+            return forbidden(Json.newObject()
+                    .put("codigo", "APENAS_ROOT")
+                    .put("erro",
+                    "Apenas o ROOT pode criar novos administradores."));
+        }
+
         Usuario salvo = usuarioRepository.create(usuario);
 
         return created(Json.toJson(salvo));
@@ -66,17 +90,20 @@ public class UsuarioController extends Controller {
     public Result update(Long id, Http.Request request) {
         JsonNode json = request.body().asJson();
         if (json == null) {
-            return badRequest("Expecting Json data");
+            return badRequest(Json.newObject()
+                    .put("codigo", "SEM_JSON")
+                    .put("erro",
+                            "JSON não encontrado."));
         }
 
         Usuario usuarioParaAtualizar = Json.fromJson(json, Usuario.class);
 
-        // Garante que o ID do objeto é o mesmo da URL
         usuarioParaAtualizar.setId(id);
 
-        // Verifica se existe antes de tentar atualizar (opcional, mas recomendado)
         if (usuarioRepository.findById(id) == null) {
-            return notFound(Json.newObject().put("message", "Usuário não existe para ser atualizado"));
+            return notFound(Json.newObject()
+                    .put("codigo", "USUARIO_NAO_EXISTE")
+                    .put("message", "Usuário não existe para ser atualizado"));
         }
 
         Usuario atualizado = usuarioRepository.update(usuarioParaAtualizar);
@@ -84,21 +111,56 @@ public class UsuarioController extends Controller {
     }
 
     // DELETE /usuarios/:id
-    public Result delete(Long id) {
+    public Result delete(Long id, Http.Request request) {
+        String roleString = request.attrs().get(SecuredAction.USER_ROLE);
+        Role cargoDoLogado = Role.valueOf(roleString);
+
+        Usuario usuarioAlvo = usuarioRepository.findById(id);
+        if (usuarioAlvo == null) {
+            return notFound(Json.newObject()
+                    .put("codigo", "USUARIO_NAO_EXISTE")
+                    .put("message", "Usuário não encontrado"));
+        }
+
+        String emailLogado = request.attrs().get(SecuredAction.USER_EMAIL);
+        if (usuarioAlvo.getEmail().equals(emailLogado)) {
+            return badRequest(Json.newObject().put("codigo", "AUTO_DELECAO_PROIBIDA")
+                    .put("erro", "Você não pode deletar a si mesmo."));
+        }
+
+        if (usuarioAlvo.getRole() == Role.ROOT) {
+            return forbidden(Json.newObject()
+                    .put("codigo", "ROOT_NAO_PODE_SER_DELETADO")
+                    .put("erro",
+                    "Ação Proibida: O Usuário ROOT não pode ser deletado via API."));
+        }
+
+        if (cargoDoLogado != Role.ROOT && usuarioAlvo.getRole() == Role.ADMIN) {
+            return forbidden(Json.newObject()
+                    .put("codigo", "APENAS_ROOT_PODE_DELETAR_ADMIN")
+                    .put("erro",
+                    "Ação Proibida: Apenas o ROOT pode deletar Administradores."));
+        }
+
         boolean deletado = usuarioRepository.delete(id);
         if (deletado) {
-            return ok(Json.newObject().put("message", "Usuário deletado com sucesso"));
+            return ok(Json.newObject()
+                    .put("codigo", "USUARIO_DELETADO")
+                    .put("message", "Usuário deletado com sucesso"));
         } else {
-            return notFound(Json.newObject().put("message", "Usuário não encontrado"));
+            return notFound(Json.newObject()
+                    .put("codigo", "USUARIO_NAO_EXISTE")
+                    .put("message", "Usuário não encontrado"));
         }
     }
 
     //GET /usuarios/:email
     public Result findByEmail(String email) {
-        // Busca exata pelo email
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
         if (usuario.isEmpty()) {
-            return notFound(Json.newObject().put("message", "Usuário não encontrado"));
+            return notFound(Json.newObject()
+                    .put("codigo", "USUARIO_NAO_EXISTE")
+                    .put("message", "Usuário não encontrado"));
         }
         return ok(Json.toJson(usuario));
     }

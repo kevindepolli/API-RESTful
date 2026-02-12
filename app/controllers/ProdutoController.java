@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.security.Secured;
 import models.PagedResult;
 import models.Produto;
 import play.libs.Json;
@@ -9,6 +10,7 @@ import repository.ProdutoDAO;
 
 import javax.inject.Inject;
 
+@Secured
 public class ProdutoController extends Controller {
 
     private final ProdutoDAO produtoDAO;
@@ -43,6 +45,7 @@ public class ProdutoController extends Controller {
     }
 
     // POST /produtos
+    @Secured("ADMIN")
     public Result create(Http.Request request) {
         JsonNode json = request.body().asJson();
         if (json == null) {
@@ -59,6 +62,7 @@ public class ProdutoController extends Controller {
     }
 
     // PUT /produtos/:id
+    @Secured("ADMIN")
     public Result update(Long id, Http.Request request) {
         JsonNode json = request.body().asJson();
         if (json == null) {
@@ -80,6 +84,7 @@ public class ProdutoController extends Controller {
     }
 
     // DELETE /produtos/:id
+    @Secured("ADMIN")
     public Result delete(Long id) {
         boolean deletado = produtoDAO.delete(id);
         if (deletado) {

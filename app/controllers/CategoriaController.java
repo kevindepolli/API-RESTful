@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.security.Secured;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Categoria;
 import play.libs.Json;
@@ -11,7 +12,7 @@ import services.CategoriaService;
 
 import javax.inject.Inject;
 import java.util.List;
-
+@Secured
 public class CategoriaController extends Controller {
 
     private final CategoriaService service;
@@ -57,6 +58,7 @@ public class CategoriaController extends Controller {
     }
 
     //POST /categorias
+    @Secured("ADMIN")
     public Result criarCategoria(Http.Request request) {
         JsonNode json = request.body().asJson();
 
@@ -75,6 +77,7 @@ public class CategoriaController extends Controller {
     }
 
     //PUT /categorias/:id
+    @Secured("ADMIN")
     public Result atualizarCategoria(Long id, Http.Request request) {
         JsonNode json = request.body().asJson();
 
@@ -93,6 +96,7 @@ public class CategoriaController extends Controller {
     }
 
     //DELETE /categorias/:id
+    @Secured("ADMIN")
     public Result deletarCategoria(Long id) {
         try {
             service.deletarCategoria(id);
