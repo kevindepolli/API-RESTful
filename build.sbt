@@ -22,8 +22,13 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += javaJdbc % Test
+
 libraryDependencies += "com.h2database" % "h2" % "1.4.200" % Test
 
 libraryDependencies += "org.glassfish" % "javax.el" % "3.0.0" % Test
 
 libraryDependencies += "org.mockito" % "mockito-core" % "5.10.0" % Test
+
+libraryDependencies += "org.junit.jupiter" % "junit-jupiter" % "5.10.2" % Test
+
+testOptions += Tests.Argument(TestFrameworks.JUnit)
