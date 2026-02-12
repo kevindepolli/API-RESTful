@@ -63,3 +63,30 @@ sbt run
 2. Acesse no seu navegador: http://localhost:9000.
 
 _Dica: O Play Framework possui "Hot Reload". Você pode alterar arquivos .java e dar F5 no navegador sem precisar reiniciar o servidor._
+
+### Passo 4: Logar
+A maioria das funcionalidades da API exigem uma identificação.
+1. Use uma das credenciais listadas abaixo para fazer o login em http://localhost:9000/login.
+
+2. O corpo da requisição deve ter o seguinte formato e ser do tipo JSON:
+    ```json
+    {
+       "email": "root@root.com",
+       "senha": "root123"
+    }
+    ```
+3. O retorno será um Bearer Token com validade de 24 horas.
+
+---
+Credenciais para fazer o login:
+
+| E-mail          | Senha         | Cargo         |
+|:----------------|:--------------|:--------------|
+| root@root.com   | root123       | Root          |
+| admin@email.com | senhafrote123 | Administrador |
+| joao@email.com  | 123456        | Usuário       |
+| maria@email.com | maria123      | Usuário       |
+| pedro@email.com | pedro@99      | Usuário       |
+| ana@email.com   | ana_segura    | Usuário       |
+
+_Observação: solicitações de criação, edição e exclusão só podem ser feitas por administradores ou usuários com cargo root._
