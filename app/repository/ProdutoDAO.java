@@ -25,7 +25,7 @@ public class ProdutoDAO {
             // Montagem da Query Dinâmica
             String hql = "FROM Produto p WHERE 1=1";
             if (termo != null && !termo.trim().isEmpty()) {
-                hql += " AND (lower(p.descricao) LIKE :termo OR lower(p.fornecedor.nome) LIKE :termo)";
+                hql += " AND (lower(p.descricao) LIKE :termo)";
             }
             hql += " ORDER BY p.id DESC"; // Ordenar pelo mais recente
 
@@ -43,7 +43,7 @@ public class ProdutoDAO {
             // Query de Contagem (Total de registros para calcular páginas)
             String countHql = "SELECT count(p) FROM Produto p WHERE 1=1";
             if (termo != null && !termo.trim().isEmpty()) {
-                countHql += " AND (lower(p.descricao) LIKE :termo OR lower(p.fornecedor.nome) LIKE :termo)";
+                countHql += " AND (lower(p.descricao) LIKE :termo)";
             }
             TypedQuery<Long> countQuery = em.createQuery(countHql, Long.class);
             if (termo != null && !termo.trim().isEmpty()) {

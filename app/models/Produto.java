@@ -32,8 +32,4 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "ID_CATEGORIA")
     public Categoria categoria;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_FORNECEDOR")
-    public Fornecedor fornecedor;
 }

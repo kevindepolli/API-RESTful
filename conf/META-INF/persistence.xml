@@ -10,7 +10,6 @@
 
         <class>models.Produto</class>
         <class>models.Categoria</class>
-        <class>models.Fornecedor</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
