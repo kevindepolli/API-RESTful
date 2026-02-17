@@ -8,7 +8,7 @@ import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import repository.ProdutoDAO;
+import repository.ProdutoRepository;
 
 import java.util.Collections;
 
@@ -21,16 +21,16 @@ import static play.test.Helpers.*;
 
 public class ProdutoControllerTest {
 
-    private ProdutoDAO produtoDAOMock;
+    private ProdutoRepository produtoRepositoryMock;
     private ProdutoController controller;
 
     @Before
     public void setup() {
         // Mock do DAO (o falso)
-        produtoDAOMock = mock(ProdutoDAO.class);
+        produtoRepositoryMock = mock(ProdutoRepository.class);
 
         // Injeta o mock no Controller em vez do DAO real
-        controller = new ProdutoController(produtoDAOMock);
+        controller = new ProdutoController(produtoRepositoryMock);
     }
 
     // (Listar e Buscar por ID)
@@ -41,7 +41,7 @@ public class ProdutoControllerTest {
         Produto p = new Produto();
         p.id = 1L;
         p.descricao = "Teste";
-        when(produtoDAOMock.findById(1L)).thenReturn(p);
+        when(produtoRepositoryMock.findById(1L)).thenReturn(p);
 
         // Acao
         Result result = controller.getById(1L);
@@ -55,7 +55,7 @@ public class ProdutoControllerTest {
     @Test
     public void testGetById_NaoEncontrado() {
         // Cenario: DAO retorna null
-        when(produtoDAOMock.findById(99L)).thenReturn(null);
+        when(produtoRepositoryMock.findById(99L)).thenReturn(null);
 
         // Acao
         Result result = controller.getById(99L);
@@ -68,7 +68,7 @@ public class ProdutoControllerTest {
     public void testList() {
         // Cenario: Preparar resultado paginado
         PagedResult<Produto> fakePage = new PagedResult<>(Collections.emptyList(), 0, 1, 10);
-        when(produtoDAOMock.findList(anyInt(), anyInt(), any())).thenReturn(fakePage);
+        when(produtoRepositoryMock.findList(anyInt(), anyInt(), any())).thenReturn(fakePage);
 
         // Criar um Request falso com Query String
         Http.Request request = fakeRequest("GET", "/produtos?page=1&termo=celular").build();
@@ -78,7 +78,7 @@ public class ProdutoControllerTest {
 
         // Verificacao
         assertEquals(OK, result.status());
-        verify(produtoDAOMock).findList(1, 10, "celular"); // Garante que o DAO foi chamado com os parametros certos
+        verify(produtoRepositoryMock).findList(1, 10, "celular"); // Garante que o DAO foi chamado com os parametros certos
     }
 
     // Teste de Criação
@@ -93,7 +93,7 @@ public class ProdutoControllerTest {
         salvo.id = 50L;
         salvo.descricao = "Novo Produto";
 
-        when(produtoDAOMock.create(any(Produto.class))).thenReturn(salvo);
+        when(produtoRepositoryMock.create(any(Produto.class))).thenReturn(salvo);
 
         // Criar JSON para enviar no body
         JsonNode jsonBody = Json.toJson(novo);
@@ -112,7 +112,7 @@ public class ProdutoControllerTest {
     @Test
     public void testDelete_Sucesso() {
         // Cenario: DAO retorna true (deletou)
-        when(produtoDAOMock.delete(1L)).thenReturn(true);
+        when(produtoRepositoryMock.delete(1L)).thenReturn(true);
 
         Result result = controller.delete(1L);
 
@@ -123,7 +123,7 @@ public class ProdutoControllerTest {
     @Test
     public void testDelete_Falha() {
         // Cenario: DAO retorna false (não achou)
-        when(produtoDAOMock.delete(99L)).thenReturn(false);
+        when(produtoRepositoryMock.delete(99L)).thenReturn(false);
 
         Result result = controller.delete(99L);
 

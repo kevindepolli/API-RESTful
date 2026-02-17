@@ -8,12 +8,12 @@ import play.db.jpa.JPAApi;
 import javax.inject.Inject;
 import java.util.List;
 
-public class ProdutoDAO {
+public class ProdutoRepository {
 
     private final JPAApi jpaApi;
 
     @Inject
-    public ProdutoDAO(JPAApi jpaApi) {
+    public ProdutoRepository(JPAApi jpaApi) {
         this.jpaApi = jpaApi;
     }
 

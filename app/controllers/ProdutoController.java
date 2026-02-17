@@ -6,18 +6,18 @@ import models.PagedResult;
 import models.Produto;
 import play.libs.Json;
 import play.mvc.*;
-import repository.ProdutoDAO;
+import repository.ProdutoRepository;
 
 import javax.inject.Inject;
 
 @Secured
 public class ProdutoController extends Controller {
 
-    private final ProdutoDAO produtoDAO;
+    private final ProdutoRepository produtoRepository;
 
     @Inject
-    public ProdutoController(ProdutoDAO produtoDAO) {
-        this.produtoDAO = produtoDAO;
+    public ProdutoController(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
     }
 
     // GET /produtos?page=1&termo=celular
@@ -30,14 +30,14 @@ public class ProdutoController extends Controller {
         String termo = request.getQueryString("termo");
         int pageSize = 10;
 
-        PagedResult<Produto> result = produtoDAO.findList(page, pageSize, termo);
+        PagedResult<Produto> result = produtoRepository.findList(page, pageSize, termo);
 
         return ok(Json.toJson(result));
     }
 
     // GET /produtos/:id
     public Result getById(Long id) {
-        Produto produto = produtoDAO.findById(id);
+        Produto produto = produtoRepository.findById(id);
         if (produto == null) {
             return notFound(Json.newObject().put("message", "Produto não encontrado"));
         }
@@ -56,7 +56,7 @@ public class ProdutoController extends Controller {
         Produto produto = Json.fromJson(json, Produto.class);
 
         // Salva no banco
-        Produto salvo = produtoDAO.create(produto);
+        Produto salvo = produtoRepository.create(produto);
 
         return created(Json.toJson(salvo));
     }
@@ -75,18 +75,18 @@ public class ProdutoController extends Controller {
         produtoParaAtualizar.id = id;
 
         // Verifica se existe antes de tentar atualizar
-        if (produtoDAO.findById(id) == null) {
+        if (produtoRepository.findById(id) == null) {
             return notFound(Json.newObject().put("message", "Produto não existe para ser atualizado"));
         }
 
-        Produto atualizado = produtoDAO.update(produtoParaAtualizar);
+        Produto atualizado = produtoRepository.update(produtoParaAtualizar);
         return ok(Json.toJson(atualizado));
     }
 
     // DELETE /produtos/:id
     @Secured("ADMIN")
     public Result delete(Long id) {
-        boolean deletado = produtoDAO.delete(id);
+        boolean deletado = produtoRepository.delete(id);
         if (deletado) {
             return ok(Json.newObject().put("message", "Produto deletado com sucesso"));
         } else {
